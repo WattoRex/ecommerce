@@ -1,0 +1,6 @@
+# librairies node
+/vendor/
+# varaible d'env
+.env
+#  fichier DTB, init
+/database/

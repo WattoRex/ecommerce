@@ -1,0 +1,18 @@
+textarea {
+  resize: none;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+input {
+  margin-bottom: 8px;
+}
+
+buton.inscription {
+  margin-top: 8px;
+}

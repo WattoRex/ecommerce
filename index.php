@@ -12,4 +12,4 @@ require('./inc/bas.inc.php');
 
 // echo getenv('NOM_VARIABLE');
 // echo '<br>';
-echo $_ENV['TEST'];
+// echo $_ENV['TEST'];

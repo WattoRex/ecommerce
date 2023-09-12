@@ -3,7 +3,7 @@
 <?php
 if ($_POST) {
     // debug($_POST);
-    $verif_caractere = preg_match('#^[a-zA-Z0-9._-]+$#', $_POST['pseudo']);
+    $verif_caractere = preg_match("#^[a-zA-Z0-9._'-]+$#", $_POST['pseudo']);
     if (!$verif_caractere || strlen($_POST['pseudo']) < 1 || strlen($_POST['pseudo']) > 20) {
         $contenu .= "<div class='erreur'>Le pseudo doit contenir entre 1 et 20 caractères. 
         <br> Caractère accepté : Lettre de A à Z et chiffre de 0 à 9</div>";
@@ -11,6 +11,16 @@ if ($_POST) {
         $utilisateur = executeRequete("SELECT * FROM utilisateur WHERE pseudo='$_POST[pseudo]'");
         if ($utilisateur->num_rows > 0) {
             $contenu .= "<div class='erreur'>Pseudo indisponible. Veuillez en choisir un autre.</div>";
+        } else {
+            $_POST['mot_de_passe'] = password_hash($_POST['mot_de_passe'], PASSWORD_BCRYPT);
+            foreach ($_POST as $indice => $valeur) {
+                $_POST[$indice] = htmlspecialchars(addslashes($valeur));
+            }
+            executeRequete("INSERT INTO utilisateur (pseudo, mot_de_passe, nom, prenom, email, civilite, ville, code_postal, adresse) 
+            VALUES ('$_POST[pseudo]', '$_POST[mot_de_passe]', '$_POST[nom]', '$_POST[prenom]', '$_POST[email]', 
+            '$_POST[civilite]', '$_POST[ville]', '$_POST[code_postal]', '$_POST[adresse]')");
+            $contenu .= "<div class='validation'>Vous êtes inscrit à notre site web. 
+            <a href=\"connexion.php\"><u>Cliquez ici pour vous connecter</u></a></div>";
         }
     }
 }
@@ -23,10 +33,10 @@ if ($_POST) {
 <form class="form" method="post" action="">
     <label for="pseudo">Pseudo</label>
     <input type="texte" name="pseudo" id="pseudo" placeholder="Votre pseudo" required maxlength="20"
-        pattern="[a-zA-Z0-9-_.]{1, 20}" title="caractère acceptés : a-z A-Z 0-9-_.">
+        title="caractère acceptés : a-z A-Z 0-9-_.">
 
-    <!-- <label for="mot-de-passe">Mot de passe</label>
-    <input type="password" id="mot-de-passe" name="mot-de-passe" placeholder="Votre mot de passe" required>
+    <label for="mot-de-passe">Mot de passe</label>
+    <input type="password" id="mot-de-passe" name="mot_de_passe" placeholder="Votre mot de passe" required>
 
     <label for="nom">Nom</label>
     <input type="text" id="nom" name="nom" placeholder="Votre nom">
@@ -54,7 +64,7 @@ if ($_POST) {
 
     <label for="adresse">Adresse</label>
     <textarea id="adresse" name="adresse" placeholder="Votre adresse" pattern="[a-zA-Z0-9-_.]{5,15}"
-        title="caractères acceptés :  a-zA-Z0-9-_."></textarea> -->
+        title="caractères acceptés :  a-zA-Z0-9-_."></textarea>
 
     <br> <button class="inscription">S'inscrire</button>
 </form>
